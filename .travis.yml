@@ -8,7 +8,7 @@ before_install:
 script:
   - docker run zifkage/react-test yarn test --coverage
 
-after_succes:
+after_success:
   - docker build -t zifkage/multi-client ./client
   - docker build -t zifkage/multi-nginx ./nginx
   - docker build -t zifkage/multi-server ./server
