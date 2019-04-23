@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t zifkage/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run zifkage/react-test yarn test --coverage
+
+after_succes:
+  - docker build -t zifkage/multi-client ./client
+  - docker build -t zifkage/multi-nginx ./nginx
+  - docker build -t zifkage/multi-server ./server
+  - docker build -t zifkage/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push zifkage/multi-client
+  - docker push zifkage/multi-nginx
+  - docker push zifkage/multi-server
+  - docker push zifkage/multi-worker
